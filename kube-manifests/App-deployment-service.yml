@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+   name: webapp-ngnix-deployment
+   labels:
+     app: webapp-ngnix
+ spec:
+    replicas: 1
+    selector:
+        matchLabels:
+            app: webapp-ngnix
+    template:
+        metadata:
+            labels:
+                app: webapp-ngnix
+        spec:
+            contaniers:
+               - name: webapp-ngnix
+                 image: demoaksacr1223.azuercr.io/webapp
+                 ports:
+                    containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+    name: webapp-loadbalancer-service
+    labels:
+        app: webapp-ngnix
+spec:
+    type: loadbalancer
+    selector:
+        app: webapp-ngnix
+    ports:
+       - port: 80
+         targetPort: 80
